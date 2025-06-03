@@ -63,35 +63,35 @@ struct Nodo {
 
 template<typename T>
 class Lista {
-private:
-    Nodo<T>* cabeza;
-    
-public:
-    Lista() : cabeza(nullptr) {}
-    
-    ~Lista() {
-        while (cabeza) {
-            Nodo<T>* temp = cabeza;
-            cabeza = cabeza->siguiente;
-            delete temp->dato;
-            delete temp;
+    private:
+        Nodo<T>* cabeza;
+        
+    public:
+        Lista() : cabeza(nullptr) {}
+        
+        ~Lista() {
+            while (cabeza) {
+                Nodo<T>* temp = cabeza;
+                cabeza = cabeza->siguiente;
+                delete temp->dato;
+                delete temp;
+            }
         }
-    }
-    
-    void agregar(T* elemento) {
-        Nodo<T>* nuevo = new Nodo<T>(elemento);
-        nuevo->siguiente = cabeza;
-        cabeza = nuevo;
-    }
-    
-    Nodo<T>* getCabeza() { return cabeza; }
-    
-    T* buscarPorId(int id) {
-        for (Nodo<T>* actual = cabeza; actual; actual = actual->siguiente) {
-            if (actual->dato->id == id) return actual->dato;
+        
+        void agregar(T* elemento) {
+            Nodo<T>* nuevo = new Nodo<T>(elemento);
+            nuevo->siguiente = cabeza;
+            cabeza = nuevo;
         }
-        return nullptr;
-    }
+        
+        Nodo<T>* getCabeza() { return cabeza; }
+        
+        T* buscarPorId(int id) {
+            for (Nodo<T>* actual = cabeza; actual; actual = actual->siguiente) {
+                if (actual->dato->id == id) return actual->dato;
+            }
+            return nullptr;
+        }
 };
 
 struct NodoMejora {
@@ -101,27 +101,27 @@ struct NodoMejora {
 };
 
 class ListaMejoras {
-private:
-    NodoMejora* cabeza;
-    
-public:
-    ListaMejoras() : cabeza(nullptr) {}
-    
-    ~ListaMejoras() {
-        while (cabeza) {
-            NodoMejora* temp = cabeza;
-            cabeza = cabeza->siguiente;
-            delete temp;
+    private:
+        NodoMejora* cabeza;
+        
+    public:
+        ListaMejoras() : cabeza(nullptr) {}
+        
+        ~ListaMejoras() {
+            while (cabeza) {
+                NodoMejora* temp = cabeza;
+                cabeza = cabeza->siguiente;
+                delete temp;
+            }
         }
-    }
-    
-    void agregar(string mejora) {
-        NodoMejora* nuevo = new NodoMejora(mejora);
-        nuevo->siguiente = cabeza;
-        cabeza = nuevo;
-    }
-    
-    NodoMejora* getCabeza() { return cabeza; }
+        
+        void agregar(string mejora) {
+            NodoMejora* nuevo = new NodoMejora(mejora);
+            nuevo->siguiente = cabeza;
+            cabeza = nuevo;
+        }
+        
+        NodoMejora* getCabeza() { return cabeza; }
 };
 
 struct NodoCombate {
@@ -131,93 +131,93 @@ struct NodoCombate {
 };
 
 class ColaCombate {
-private:
-    NodoCombate* frente;
-    NodoCombate* final;
-    
-public:
-    ColaCombate() : frente(nullptr), final(nullptr) {}
-    
-    ~ColaCombate() {
-        while (!estaVacia()) desencolar();
-    }
-    
-    void encolar(Enemigo* enemigo) {
-        NodoCombate* nuevo = new NodoCombate(enemigo);
-        if (!final) {
-            frente = final = nuevo;
-        } else {
-            final->siguiente = nuevo;
-            final = nuevo;
-        }
-    }
-    
-    void desencolar() {
-        if (!frente) return;
-        NodoCombate* temp = frente;
-        frente = frente->siguiente;
-        if (!frente) final = nullptr;
-        delete temp->enemigo;
-        delete temp;
-    }
-    
-    Enemigo* obtenerFrente() { return frente ? frente->enemigo : nullptr; }
-    bool estaVacia() const { return !frente; }
-    NodoCombate* getCabeza() { return frente; }
-    
-    void mostrarEnemigos() {
-        for (NodoCombate* actual = frente; actual; actual = actual->siguiente) {
-            cout << (actual->enemigo->vida > 0 ? actual->enemigo->nombre : "X") << " | ";
-        }
-    }
-    
-    void eliminarMuertos() {
-        while (frente && frente->enemigo->vida <= 0) 
-            desencolar();
+    private:
+        NodoCombate* frente;
+        NodoCombate* final;
         
-        if (frente) {
-            for (NodoCombate* actual = frente; actual->siguiente;) {
-                if (actual->siguiente->enemigo->vida <= 0) {
-                    NodoCombate* temp = actual->siguiente;
-                    actual->siguiente = temp->siguiente;
-                    if (temp == final) final = actual;
-                    delete temp->enemigo;
-                    delete temp;
-                } else {
-                    actual = actual->siguiente;
+    public:
+        ColaCombate() : frente(nullptr), final(nullptr) {}
+        
+        ~ColaCombate() {
+            while (!estaVacia()) desencolar();
+        }
+        
+        void encolar(Enemigo* enemigo) {
+            NodoCombate* nuevo = new NodoCombate(enemigo);
+            if (!final) {
+                frente = final = nuevo;
+            } else {
+                final->siguiente = nuevo;
+                final = nuevo;
+            }
+        }
+        
+        void desencolar() {
+            if (!frente) return;
+            NodoCombate* temp = frente;
+            frente = frente->siguiente;
+            if (!frente) final = nullptr;
+            delete temp->enemigo;
+            delete temp;
+        }
+        
+        Enemigo* obtenerFrente() { return frente ? frente->enemigo : nullptr; }
+        bool estaVacia() const { return !frente; }
+        NodoCombate* getCabeza() { return frente; }
+        
+        void mostrarEnemigos() {
+            for (NodoCombate* actual = frente; actual; actual = actual->siguiente) {
+                cout << (actual->enemigo->vida > 0 ? actual->enemigo->nombre : "X") << " | ";
+            }
+        }
+        
+        void eliminarMuertos() {
+            while (frente && frente->enemigo->vida <= 0) 
+                desencolar();
+            
+            if (frente) {
+                for (NodoCombate* actual = frente; actual->siguiente;) {
+                    if (actual->siguiente->enemigo->vida <= 0) {
+                        NodoCombate* temp = actual->siguiente;
+                        actual->siguiente = temp->siguiente;
+                        if (temp == final) final = actual;
+                        delete temp->enemigo;
+                        delete temp;
+                    } else {
+                        actual = actual->siguiente;
+                    }
                 }
             }
         }
-    }
 };
 
 class Jugador {
-private:
-    int vida, ataque, recuperacion;
-    float precision;
-    
-public:
-    Jugador(int v = 30, int a = 7, float p = 0.8, int r = 3) 
-        : vida(v), ataque(a), recuperacion(r), precision(p) {} 
-    
-    int getVida() const { return vida; }
-    int getAtaque() const { return ataque; }
-    float getPrecision() const { return precision; }
-    int getRecuperacion() const { return recuperacion; }
-    
-    void curar(int cantidad) { vida += cantidad; }
-    void recibirDano(int dano) { vida = max(0, vida - dano); }
-    void aumentarAtaque(int cantidad) { ataque += cantidad; }
-    void aumentarPrecision(float cantidad) { precision = min(1.0f, precision + cantidad); }
-    void aumentarRecuperacion(int cantidad) { recuperacion += cantidad; }
-    void setPrecision(float p) { precision = max(0.0f, p); }
-    
-    bool estaVivo() const { return vida > 0; }
-    
-    void mostrarEstado() const {
-        cout << "Estado - Vida: " << vida << ", Ataque: " << ataque 
-             << ", Precisión: " << precision << ", Recuperación: " << recuperacion << endl;
-    }
+    private:
+        int vida, ataque, recuperacion;
+        float precision;
+        
+    public:
+        Jugador(int v = 30, int a = 7, float p = 0.8, int r = 3) 
+            : vida(v), ataque(a), recuperacion(r), precision(p) {} 
+        
+        int getVida() const { return vida; }
+        int getAtaque() const { return ataque; }
+        float getPrecision() const { return precision; }
+        int getRecuperacion() const { return recuperacion; }
+        
+        void curar(int cantidad) { vida += cantidad; }
+        void recibirDano(int dano) { vida = max(0, vida - dano); }
+        void aumentarAtaque(int cantidad) { ataque += cantidad; }
+        void aumentarPrecision(float cantidad) { precision = min(1.0f, precision + cantidad); }
+        void aumentarRecuperacion(int cantidad) { recuperacion += cantidad; }
+        void setPrecision(float p) { precision = max(0.0f, p); }
+        
+        bool estaVivo() const { return vida > 0; }
+        
+        void mostrarEstado() const {
+            cout << "Estado - Vida: " << vida << ", Ataque: " << ataque 
+                << ", Precisión: " << precision << ", Recuperación: " << recuperacion << endl;
+        }
 };
 
 Lista<Habitacion>* habitaciones = nullptr;
@@ -234,42 +234,42 @@ struct NodoPila {
 
 };
 class Pila{
-private:
-    NodoPila* tope;
-public:
-    Pila() : tope(nullptr) {}
-    ~Pila() {
-        while (tope){
-           NodoPila* t = tope;
-           tope = tope->siguiente;
-           delete t;
-        }
-    }
-    void push(Habitacion* h){
-        NodoPila* nuevo = new NodoPila(h);
-        nuevo->siguiente = tope;
-        tope = nuevo;
-    }
-    void pop(){
-        if (tope) {
-            NodoPila* temp = tope;
+    private:
+        NodoPila* tope;
+    public:
+        Pila() : tope(nullptr) {}
+        ~Pila() {
+            while (tope){
+            NodoPila* t = tope;
             tope = tope->siguiente;
-            delete temp;
+            delete t;
+            }
         }
-    }
-    Habitacion* top(){
-        if(tope == nullptr){
+        void push(Habitacion* h){
+            NodoPila* nuevo = new NodoPila(h);
+            nuevo->siguiente = tope;
+            tope = nuevo;
+        }
+        void pop(){
+            if (tope) {
+                NodoPila* temp = tope;
+                tope = tope->siguiente;
+                delete temp;
+            }
+        }
+        Habitacion* top(){
+            if(tope == nullptr){
+                return nullptr;
+            }
+            return tope->habitacion;
+
+        }
+        Habitacion* abuelo(){
+            if(tope && tope->siguiente && tope->siguiente->siguiente){
+                return tope->siguiente->siguiente->habitacion;
+            }
             return nullptr;
         }
-        return tope->habitacion;
-
-    }
-    Habitacion* abuelo(){
-        if(tope && tope->siguiente && tope->siguiente->siguiente){
-            return tope->siguiente->siguiente->habitacion;
-        }
-        return nullptr;
-    }
 };
 /* ****
 * void eliminarEspacios
